@@ -11,6 +11,15 @@ module cz.cuni.mff.java.project.filemanager {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
+    // Model package access
+    opens cz.cuni.mff.java.project.filemanager.model to javafx.base;
+    exports cz.cuni.mff.java.project.filemanager.model;
+
+    // Controller package access
+    opens cz.cuni.mff.java.project.filemanager.controller to javafx.fxml;
+    exports cz.cuni.mff.java.project.filemanager.controller;
+
+    // Main package access
     opens cz.cuni.mff.java.project.filemanager to javafx.fxml;
     exports cz.cuni.mff.java.project.filemanager;
 }

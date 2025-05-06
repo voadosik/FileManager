@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="cz.cuni.mff.java.project.filemanager.controller.MainController"
+            prefWidth="800" prefHeight="600">
+
+    <left>
+        <TreeView fx:id="directoryTree" prefWidth="250"/>
+    </left>
+
+    <center>
+        <TableView fx:id="fileTable">
+            <columns>
+                <TableColumn fx:id="fileName" text="Name" prefWidth="250"/>
+                <TableColumn fx:id="fileType" text="Type" prefWidth="100"/>
+                <TableColumn fx:id="fileSize" text="Size" prefWidth="100"/>
+                <TableColumn fx:id="fileDate" text="Modified" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

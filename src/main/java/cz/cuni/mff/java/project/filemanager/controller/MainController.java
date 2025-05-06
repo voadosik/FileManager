@@ -9,6 +9,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Optional;
 import java.util.Stack;
 
 public class MainController {
@@ -69,7 +76,7 @@ public class MainController {
             });
             return row;
         });
-
+        fileTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private void showFilesInDirectory(File directory) {
@@ -138,13 +145,130 @@ public class MainController {
         return item;
     }
 
+    private void createNewItem(boolean isDirectory) {
+        TextInputDialog dialog = new TextInputDialog();
+        String fileType = isDirectory ? "Directory" : "File";
+        dialog.setTitle("New " + fileType);
+        dialog.setHeaderText("Enter Name for new " + fileType.toLowerCase());
+        dialog.setContentText("Name: ");
 
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(name -> {
+            if(name.isEmpty() || name.contains("\\") || name.contains("/")) {
+                showError("Invalid name", "Name cannot be empty or contain slashes");
+                return;
+            }
+            File newItem = new File(currentDirectory, name);
+            try{
+                if(isDirectory) {
+                    if(!newItem.mkdir()) {
+                        showError("Fail", "Unable to create directory");
+                    }
+                } else{
+                    if(!newItem.createNewFile()){
+                        showError("Fail", "Unable to create new file");
+                    }
+                }
+                updateDirectoryView();
+            } catch (IOException e) {
+                showError("Error occured", e.getMessage());
+            }
+        });
+
+    }
+
+    private void updateDirectoryView() {
+        showFilesInDirectory(currentDirectory);
+    }
+
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void deleteRecursively(File file) throws IOException {
+        Path path = file.toPath();
+        if(Files.exists(path)){
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException{
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+
+    }
+
+
+    // Handlers
+
+    @FXML
+    private void handleNewFile() {
+        createNewItem(false);
+    }
+
+    @FXML
+    private void handleNewFolder() {
+        createNewItem(true);
+    }
 
     @FXML
     private void handleRename() {}
 
     @FXML
-    private void handleDelete() {}
+    private void handleDelete() {
+        ObservableList<FileItem> selectedItems = fileTable.getSelectionModel().getSelectedItems();
+        if(selectedItems == null || selectedItems.isEmpty()) {
+            showError("No items selected", "Please select item to delete");
+            return;
+        }
+
+        StringBuilder builder = new StringBuilder("Are you sure you want to delete: \n");
+        for(FileItem item : selectedItems) {
+            builder.append("- ").append(item.getName()).append("\n");
+        }
+
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirm deletion");
+        confirmation.setHeaderText(null);
+        confirmation.setContentText(builder.toString());
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.OK) {
+            boolean allDeleted = true;
+            StringBuilder errors = new StringBuilder();
+
+            for(FileItem item : selectedItems) {
+                File f = item.getFile();
+                try{
+                    deleteRecursively(f);
+                }catch (IOException e){
+                    allDeleted = false;
+                    errors.append("Failed to delete ")
+                            .append(f.getName())
+                            .append(": ")
+                            .append(e.getMessage())
+                            .append("\n");
+                }
+
+            }
+            if(!allDeleted) {
+                showError("Delete failed", errors.toString());
+            }
+        }
+
+        updateDirectoryView();
+
+    }
 
     @FXML
     private void handleBack(){

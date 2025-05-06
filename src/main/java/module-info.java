@@ -2,6 +2,7 @@ module cz.cuni.mff.java.project.filemanager {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
+    requires javafx.graphics;  // For dialogs
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;

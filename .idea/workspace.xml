@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44300700-51e8-4dd6-b9e5-f87643ac572f" name="Changes" comment="Back button, directory opening">
+    <list default="true" id="44300700-51e8-4dd6-b9e5-f87643ac572f" name="Changes" comment="Absolute path field on the top">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/cz/cuni/mff/java/project/filemanager/hello-view.fxml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/layout/main.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/layout/main.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,7 +81,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1746552784878</updated>
-      <workItem from="1746552785903" duration="6627000" />
+      <workItem from="1746552785903" duration="7881000" />
     </task>
     <task id="LOCAL-00001" summary="Create project">
       <option name="closed" value="true" />
@@ -106,7 +107,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746559088119</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Absolute path field on the top">
+      <option name="closed" value="true" />
+      <created>1746559970716</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1746559970716</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -116,6 +125,7 @@
     <MESSAGE value="Create project" />
     <MESSAGE value="Main Window, File,Directory Tree" />
     <MESSAGE value="Back button, directory opening" />
-    <option name="LAST_COMMIT_MESSAGE" value="Back button, directory opening" />
+    <MESSAGE value="Absolute path field on the top" />
+    <option name="LAST_COMMIT_MESSAGE" value="Absolute path field on the top" />
   </component>
 </project>

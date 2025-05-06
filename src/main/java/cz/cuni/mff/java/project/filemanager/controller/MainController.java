@@ -20,10 +20,16 @@ public class MainController {
     @FXML private TableColumn<FileItem, String> fileSize;
 
     @FXML private TextField pathTextField;
-
-    private final Stack<File> history = new Stack<>();
     private File currentDirectory;
+
+
+    private final Stack<File> backHistory = new Stack<>();
+    private final Stack<File> forwardHistory = new Stack<>();
     private boolean isNavigatingBack = false;
+    private boolean isNavigatingForward = false;
+
+    @FXML private Button btnBack;
+    @FXML private Button btnForward;
 
     @FXML
     public void initialize() {
@@ -33,6 +39,8 @@ public class MainController {
         fileDate.setCellValueFactory(new PropertyValueFactory<>("modified"));
         fileSize.setCellValueFactory(new PropertyValueFactory<>("size"));
 
+        btnBack.setDisable(true);
+        btnForward.setDisable(true);
 
         TreeItem<File> rootItem = new TreeItem<>(new File("My Computer")); //Dummy
         rootItem.setExpanded(true);
@@ -66,10 +74,21 @@ public class MainController {
 
     private void showFilesInDirectory(File directory) {
         if(!directory.isDirectory()) return;
-        if(!isNavigatingBack && currentDirectory != null) {history.push(currentDirectory);}
+        if(!isNavigatingBack && !isNavigatingForward && currentDirectory != null)
+        {
+            backHistory.push(currentDirectory);
+            forwardHistory.clear();
+        }
+
         pathTextField.setText(directory.getAbsolutePath());
         currentDirectory = directory;
 
+        updateFileTable(directory);
+        updateNavigationButtons();
+        selectInTreeView(directory);
+    }
+
+    private void updateFileTable(File directory) {
         ObservableList<FileItem> items = FXCollections.observableArrayList();
         File[] files = directory.listFiles();
         if(files != null) {
@@ -78,8 +97,11 @@ public class MainController {
             }
         }
         fileTable.setItems(items);
+    }
 
-        selectInTreeView(directory);
+    private void updateNavigationButtons() {
+        btnBack.setDisable(backHistory.isEmpty());
+        btnForward.setDisable(forwardHistory.isEmpty());
     }
 
     private void selectInTreeView(File directory) {
@@ -126,11 +148,23 @@ public class MainController {
 
     @FXML
     private void handleBack(){
-        if(!history.isEmpty()) {
+        if(!backHistory.isEmpty()) {
             isNavigatingBack = true;
-            File previousDirectory = history.pop();
+            forwardHistory.push(currentDirectory);
+            File previousDirectory = backHistory.pop();
             showFilesInDirectory(previousDirectory);
             isNavigatingBack = false;
+        }
+    }
+
+    @FXML
+    private void handleForward(){
+        if(!forwardHistory.isEmpty()) {
+            isNavigatingForward = true;
+            backHistory.push(currentDirectory);
+            File nextDirectory = forwardHistory.pop();
+            showFilesInDirectory(nextDirectory);
+            isNavigatingForward = false;
         }
     }
 }

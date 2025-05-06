@@ -7,7 +7,8 @@
             prefWidth="800" prefHeight="600">
     <top>
         <ToolBar>
-            <Button text="←" onAction="#handleBack"/>
+            <Button text="←" onAction="#handleBack" disable="true" fx:id="btnBack"/>
+            <Button text="→" onAction="#handleForward" disable="true" fx:id="btnForward"/>
             <Separator orientation="VERTICAL"/>
             <TextField fx:id="pathTextField" prefWidth="600" editable="false"
                        style="-fx-font-family: Calibri; -fx-font-size: 16;"/>

@@ -17,6 +17,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainController {
     @FXML private TreeView<File> directoryTree;
@@ -41,6 +43,25 @@ public class MainController {
     @FXML
     public void initialize() {
         fileName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        fileName.setOnEditCommit(event -> {
+            FileItem item = event.getRowValue();
+            String newName = event.getNewValue();
+            File newFile = new File(item.getFile().getParentFile(), newName);
+
+            try{
+                if(item.getFile().renameTo(newFile)){
+                    item.getFile().renameTo(newFile);
+                    updateDirectoryView();
+                }else{
+                    showError("Rename failed", "Could not rename file");
+                    fileTable.refresh();
+                }
+
+            }catch (SecurityException se){
+                showError("Permission denied", "No permission to rename file");
+                fileTable.refresh();
+            }
+        });
         fileType.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getFile().isDirectory() ? "Directory" : "File"));
         fileDate.setCellValueFactory(new PropertyValueFactory<>("modified"));
@@ -208,7 +229,6 @@ public class MainController {
 
     }
 
-
     // Handlers
 
     @FXML
@@ -222,7 +242,42 @@ public class MainController {
     }
 
     @FXML
-    private void handleRename() {}
+    private void handleRename() {
+        FileItem selectedItem = fileTable.getSelectionModel().getSelectedItem();
+        if(selectedItem == null){
+            showError("No item is selected", "Please select an item to rename first");
+            return;
+        }
+        File fileToRename = selectedItem.getFile();
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Rename " + fileToRename.getName());
+        dialog.setHeaderText("Enter new name for this item");
+        dialog.setContentText("New name: ");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(name -> {
+            if(name.isEmpty() || name.contains("\\") || name.contains("/")) {
+                showError("Invalid name", "Name cannot be empty or contain slashes");
+                return;
+            }
+
+            File f = new File(fileToRename.getParentFile(), name);
+            if(f.exists()){
+                showError("Name exists", "A file with this name already exists in the current directory");
+                return;
+            }
+            try{
+                boolean renamed = fileToRename.renameTo(f);
+                if(!renamed){
+                    throw new IOException("Failed to rename file");
+                }
+                updateDirectoryView();
+            }
+            catch(SecurityException | IOException e){
+                showError("Rename failed", "Error renaming file "+ e.getMessage());
+            }
+        });
+    }
 
     @FXML
     private void handleDelete() {

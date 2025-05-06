@@ -15,6 +15,7 @@
             <Pane HBox.hgrow="ALWAYS"/>
             <Button text="New File" onAction="#handleNewFile"/>
             <Button text="New Folder" onAction="#handleNewFolder"/>
+            <Button text="Rename" onAction="#handleRename"/>
             <Button text="Delete" onAction="#handleDelete"/>
         </ToolBar>
     </top>

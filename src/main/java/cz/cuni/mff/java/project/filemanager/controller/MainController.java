@@ -5,13 +5,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.File;
+import java.util.Stack;
 
 public class MainController {
     @FXML private TreeView<File> directoryTree;
@@ -20,6 +18,10 @@ public class MainController {
     @FXML private TableColumn<FileItem, String> fileType;
     @FXML private TableColumn<FileItem, String> fileDate;
     @FXML private TableColumn<FileItem, String> fileSize;
+
+    private final Stack<File> history = new Stack<>();
+    private File currentDirectory;
+    private boolean isNavigatingBack = false;
 
     @FXML
     public void initialize() {
@@ -41,9 +43,30 @@ public class MainController {
                 showFilesInDirectory(newValue.getValue());
             }
         });
+
+        currentDirectory = new File("user.home");
+        showFilesInDirectory(currentDirectory);
+        fileTable.setRowFactory(tv ->{
+            TableRow<FileItem> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if(event.getClickCount() == 2 && !row.isEmpty()) {
+                    FileItem item = row.getItem();
+                    File file = item.getFile();
+                    if(file.isDirectory()) {
+                        showFilesInDirectory(file);
+                    }
+                }
+            });
+            return row;
+        });
+
     }
 
     private void showFilesInDirectory(File directory) {
+        if(!directory.isDirectory()) return;
+        if(!isNavigatingBack && currentDirectory != null) {history.push(currentDirectory);}
+        currentDirectory = directory;
+
         ObservableList<FileItem> items = FXCollections.observableArrayList();
         File[] files = directory.listFiles();
         if(files != null) {
@@ -52,7 +75,24 @@ public class MainController {
             }
         }
         fileTable.setItems(items);
+
+        selectInTreeView(directory);
     }
+
+    private void selectInTreeView(File directory) {
+        TreeItem<File> rootItem = directoryTree.getRoot();
+        if(rootItem == null) return;
+
+        for(TreeItem<File> child : rootItem.getChildren()) {
+            if(child.getValue().equals(directory)) {
+                directoryTree.getSelectionModel().select(child);
+                directoryTree.scrollTo(directoryTree.getRow(child));
+                return;
+            }
+        }
+    }
+
+
 
     private TreeItem<File> createNode(File file) {
         TreeItem<File> item = new TreeItem<>(file);
@@ -79,4 +119,14 @@ public class MainController {
 
     @FXML
     private void handleDelete() {}
+
+    @FXML
+    private void handleBack(){
+        if(!history.isEmpty()) {
+            isNavigatingBack = true;
+            File previousDirectory = history.pop();
+            showFilesInDirectory(previousDirectory);
+            isNavigatingBack = false;
+        }
+    }
 }

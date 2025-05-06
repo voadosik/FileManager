@@ -5,6 +5,11 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="cz.cuni.mff.java.project.filemanager.controller.MainController"
             prefWidth="800" prefHeight="600">
+    <top>
+        <ToolBar>
+            <Button text="←" onAction="#handleBack"/>
+        </ToolBar>
+    </top>
 
     <left>
         <TreeView fx:id="directoryTree" prefWidth="250"/>

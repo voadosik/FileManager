@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44300700-51e8-4dd6-b9e5-f87643ac572f" name="Changes" comment="New file, folder, remove">
+    <list default="true" id="44300700-51e8-4dd6-b9e5-f87643ac572f" name="Changes" comment="Rename">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/model/FileItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/model/FileItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/layout/main.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/layout/main.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +79,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1746552784878</updated>
-      <workItem from="1746552785903" duration="13172000" />
+      <workItem from="1746552785903" duration="13911000" />
     </task>
     <task id="LOCAL-00001" summary="Create project">
       <option name="closed" value="true" />
@@ -131,7 +129,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746564229164</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Rename">
+      <option name="closed" value="true" />
+      <created>1746566578508</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1746566578508</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,6 +151,7 @@
     <MESSAGE value="Button back" />
     <MESSAGE value="Button forward" />
     <MESSAGE value="New file, folder, remove" />
-    <option name="LAST_COMMIT_MESSAGE" value="New file, folder, remove" />
+    <MESSAGE value="Rename" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rename" />
   </component>
 </project>

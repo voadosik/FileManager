@@ -17,8 +17,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+
 
 public class MainController {
     @FXML private TreeView<File> directoryTree;
@@ -78,12 +78,11 @@ public class MainController {
         directoryTree.setRoot(rootItem);
         directoryTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) {
-                showFilesInDirectory(newValue.getValue());
+                showFilesInDirectory(newValue.getValue(), true);
             }
         });
 
         currentDirectory = new File("user.home");
-        showFilesInDirectory(currentDirectory);
         fileTable.setRowFactory(tv ->{
             TableRow<FileItem> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -91,7 +90,7 @@ public class MainController {
                     FileItem item = row.getItem();
                     File file = item.getFile();
                     if(file.isDirectory()) {
-                        showFilesInDirectory(file);
+                        showFilesInDirectory(file, true);
                     }
                 }
             });
@@ -100,12 +99,15 @@ public class MainController {
         fileTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    private void showFilesInDirectory(File directory) {
+    private void showFilesInDirectory(File directory, boolean isNavigating) {
         if(!directory.isDirectory()) return;
-        if(!isNavigatingBack && !isNavigatingForward && currentDirectory != null)
+
+        if(isNavigating)
         {
-            backHistory.push(currentDirectory);
-            forwardHistory.clear();
+            if(currentDirectory != null && !isNavigatingBack && !isNavigatingForward) {
+                backHistory.push(currentDirectory);
+                forwardHistory.clear();
+            }
         }
 
         pathTextField.setText(directory.getAbsolutePath());
@@ -199,7 +201,7 @@ public class MainController {
     }
 
     private void updateDirectoryView() {
-        showFilesInDirectory(currentDirectory);
+        showFilesInDirectory(currentDirectory, false);
     }
 
     private void showError(String title, String message) {
@@ -331,7 +333,7 @@ public class MainController {
             isNavigatingBack = true;
             forwardHistory.push(currentDirectory);
             File previousDirectory = backHistory.pop();
-            showFilesInDirectory(previousDirectory);
+            showFilesInDirectory(previousDirectory, true);
             isNavigatingBack = false;
         }
     }
@@ -342,7 +344,7 @@ public class MainController {
             isNavigatingForward = true;
             backHistory.push(currentDirectory);
             File nextDirectory = forwardHistory.pop();
-            showFilesInDirectory(nextDirectory);
+            showFilesInDirectory(nextDirectory, true);
             isNavigatingForward = false;
         }
     }

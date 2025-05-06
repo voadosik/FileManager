@@ -11,7 +11,7 @@ public class FileManagerApp extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/main.fxml"));
         Scene scene = new Scene(loader.load());
         primaryStage.setScene(scene);
-        primaryStage.setTitle("FileManager");
+        primaryStage.setTitle("File Manager");
         primaryStage.show();
     }
 

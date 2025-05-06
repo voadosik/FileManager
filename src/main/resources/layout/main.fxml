@@ -8,6 +8,9 @@
     <top>
         <ToolBar>
             <Button text="←" onAction="#handleBack"/>
+            <Separator orientation="VERTICAL"/>
+            <TextField fx:id="pathTextField" prefWidth="600" editable="false"
+                       style="-fx-font-family: Calibri; -fx-font-size: 16;"/>
         </ToolBar>
     </top>
 

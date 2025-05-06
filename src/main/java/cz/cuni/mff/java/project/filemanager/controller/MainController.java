@@ -19,6 +19,8 @@ public class MainController {
     @FXML private TableColumn<FileItem, String> fileDate;
     @FXML private TableColumn<FileItem, String> fileSize;
 
+    @FXML private TextField pathTextField;
+
     private final Stack<File> history = new Stack<>();
     private File currentDirectory;
     private boolean isNavigatingBack = false;
@@ -65,6 +67,7 @@ public class MainController {
     private void showFilesInDirectory(File directory) {
         if(!directory.isDirectory()) return;
         if(!isNavigatingBack && currentDirectory != null) {history.push(currentDirectory);}
+        pathTextField.setText(directory.getAbsolutePath());
         currentDirectory = directory;
 
         ObservableList<FileItem> items = FXCollections.observableArrayList();
@@ -90,6 +93,7 @@ public class MainController {
                 return;
             }
         }
+        pathTextField.setText(directory.getAbsolutePath());
     }
 
 

@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,15 +72,67 @@ public class MainController {
         btnBack.setDisable(true);
         btnForward.setDisable(true);
 
-        TreeItem<File> rootItem = new TreeItem<>(new File("My Computer")); //Dummy
+        TreeItem<File> rootItem = new TreeItem<>(new File("This PC")){
+            @Override
+            public String toString() {
+                return "This PC";
+            }
+        }; //Dummy
         rootItem.setExpanded(true);
+
+        Image driveIcon = new Image(getClass().getResourceAsStream("/images/drive-icon.png"));
+        Image folderIcon = new Image(getClass().getResourceAsStream("/images/folder-icon.png"));
+
         for(File root : File.listRoots()) {
-            rootItem.getChildren().add(createNode(root));
+            TreeItem<File> driveItem = createNode(root);
+            ImageView icon = new ImageView(driveIcon);
+            icon.setFitHeight(16);
+            icon.setFitWidth(16);
+            driveItem.setGraphic(icon);
+            rootItem.getChildren().add(driveItem);
         }
         directoryTree.setRoot(rootItem);
+        directoryTree.setShowRoot(true);
         directoryTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) {
                 showFilesInDirectory(newValue.getValue(), true);
+            }
+        });
+
+        directoryTree.setCellFactory(tv -> new TreeCell<File>() {
+            private final Image driveImage;
+            private final Image folderImage;
+
+            {
+                try {
+                    driveImage = new Image(getClass().getResourceAsStream("/images/drive-icon.png"));
+                    folderImage = new Image(getClass().getResourceAsStream("/images/folder-icon.png"));
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to load icons", e);
+                }
+            }
+
+            @Override
+            protected void updateItem(File item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(getTreeItem().toString());
+
+                    ImageView iconView = new ImageView();
+                    iconView.setFitWidth(16);
+                    iconView.setFitHeight(16);
+
+                    if (item.getPath().endsWith(File.separator)) {
+                        iconView.setImage(driveImage);
+                    } else {
+                        iconView.setImage(folderImage);
+                    }
+
+                    setGraphic(iconView);
+                }
             }
         });
 
@@ -151,11 +205,43 @@ public class MainController {
 
 
     private TreeItem<File> createNode(File file) {
-        TreeItem<File> item = new TreeItem<>(file);
+        String displayName = file.getPath().endsWith(File.separator)
+                ? file.getPath()
+                : file.getName();
+
+        TreeItem<File> item = new TreeItem<>(file){
+            @Override
+            public String toString() {
+                return displayName;
+            }
+        };
         item.setExpanded(false);
+
+        if(file.isDirectory()) {
+            TreeItem<File> dummy = new TreeItem<>();
+            item.getChildren().add(dummy);
+
+            item.addEventHandler(TreeItem.<File>branchExpandedEvent(), event -> {
+                TreeItem<File> expandedItem = event.getSource();
+
+                if (expandedItem.getChildren().size() == 1 &&
+                        expandedItem.getChildren().get(0).getValue() == null) {
+
+                    expandedItem.getChildren().clear();
+                    File[] subDirs = expandedItem.getValue().listFiles(File::isDirectory);
+
+                    if (subDirs != null) {
+                        for (File dir : subDirs) {
+                            expandedItem.getChildren().add(createNode(dir));
+                        }
+                    }
+                }
+            });
+        }
 
         item.expandedProperty().addListener((observable, wasExpanded, isExpanded) -> {
            if(isExpanded && item.getChildren().isEmpty()) {
+               item.getChildren().clear();
                File[] directories = file.listFiles(File::isDirectory);
                if(directories != null) {
                    for(File directory : directories) {

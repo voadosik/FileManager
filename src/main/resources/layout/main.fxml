@@ -4,19 +4,21 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="cz.cuni.mff.java.project.filemanager.controller.MainController"
+            stylesheets="@../style/style.css"
             prefWidth="1280" prefHeight="960">
     <top>
         <ToolBar>
+
             <Button text="←" onAction="#handleBack" disable="true" fx:id="btnBack"/>
             <Button text="→" onAction="#handleForward" disable="true" fx:id="btnForward"/>
             <Separator orientation="VERTICAL"/>
             <TextField fx:id="pathTextField" prefWidth="600" editable="false"
                        style="-fx-font-family: Calibri; -fx-font-size: 16;"/>
             <Pane HBox.hgrow="ALWAYS"/>
-            <Button text="New File" onAction="#handleNewFile"/>
-            <Button text="New Folder" onAction="#handleNewFolder"/>
-            <Button text="Rename" onAction="#handleRename"/>
-            <Button text="Delete" onAction="#handleDelete"/>
+            <Button text="📄 New File" onAction="#handleNewFile"/>
+            <Button text="📁 New Folder" onAction="#handleNewFolder"/>
+            <Button fx:id="btnRename" text="✏️ Rename" onAction="#handleRename"/>
+            <Button fx:id="btnDelete" text="🗑️ Delete" onAction="#handleDelete"/>
         </ToolBar>
     </top>
 

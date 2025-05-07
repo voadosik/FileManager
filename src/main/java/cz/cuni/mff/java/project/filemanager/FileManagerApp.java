@@ -10,6 +10,7 @@ public class FileManagerApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/main.fxml"));
         Scene scene = new Scene(loader.load());
+        scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setTitle("File Manager");
         primaryStage.show();

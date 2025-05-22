@@ -27,23 +27,23 @@ import java.util.Stack;
 
 
 public class MainController {
-    @FXML private TreeView<File> directoryTree;
-    @FXML private TableView<FileItem> fileTable;
-    @FXML private TableColumn<FileItem, String> fileName;
-    @FXML private TableColumn<FileItem, String> fileType;
-    @FXML private TableColumn<FileItem, String> fileDate;
-    @FXML private TableColumn<FileItem, String> fileSize;
+    @FXML protected TreeView<File> directoryTree;
+    @FXML protected TableView<FileItem> fileTable;
+    @FXML protected TableColumn<FileItem, String> fileName;
+    @FXML protected TableColumn<FileItem, String> fileType;
+    @FXML protected TableColumn<FileItem, String> fileDate;
+    @FXML protected TableColumn<FileItem, String> fileSize;
 
-    @FXML private TextField pathTextField;
-    private File currentDirectory;
+    @FXML protected TextField pathTextField;
+    protected File currentDirectory;
 
 
-    private final Stack<File> backHistory = new Stack<>();
-    private final Stack<File> forwardHistory = new Stack<>();
-    private boolean isNavigatingBack = false;
-    private boolean isNavigatingForward = false;
+    protected Stack<File> backHistory = new Stack<>();
+    protected Stack<File> forwardHistory = new Stack<>();
+    protected boolean isNavigatingBack = false;
+    protected boolean isNavigatingForward = false;
 
-    private final ClipboardManager clipboard = ClipboardManager.getInstance();
+    protected ClipboardManager clipboard = ClipboardManager.getInstance();
 
     @FXML private Button btnBack;
     @FXML private Button btnForward;
@@ -197,7 +197,7 @@ public class MainController {
                 });
     }
 
-    private void showFilesInDirectory(File directory, boolean isNavigating) {
+    protected void showFilesInDirectory(File directory, boolean isNavigating) {
         if(!directory.isDirectory()) return;
 
 
@@ -218,7 +218,7 @@ public class MainController {
         selectInTreeView(directory);
     }
 
-    private void updateFileTable(File directory) {
+    protected void updateFileTable(File directory) {
         ObservableList<FileItem> items = FXCollections.observableArrayList();
         File[] files = directory.listFiles();
         if(files != null) {
@@ -402,7 +402,7 @@ public class MainController {
         }
     }
 
-    private void deleteRecursively(File file) throws IOException {
+    protected void deleteRecursively(File file) throws IOException {
         Path path;
         path = file.toPath();
         if(Files.exists(path)){
@@ -568,7 +568,7 @@ public class MainController {
     }
 
     @FXML
-    private void handleBack(){
+    protected void handleBack(){
         if(!backHistory.isEmpty()) {
             isNavigatingBack = true;
             forwardHistory.push(currentDirectory);
@@ -579,7 +579,7 @@ public class MainController {
     }
 
     @FXML
-    private void handleForward(){
+    protected void handleForward(){
         if(!forwardHistory.isEmpty()) {
             isNavigatingForward = true;
             backHistory.push(currentDirectory);
@@ -653,7 +653,7 @@ public class MainController {
         clipboard.setFiles(files, false);
     }
 
-    private File generateName(File targetDirectory, String name){
+    protected File generateName(File targetDirectory, String name){
         String baseName;
         String extension;
         int dot = name.lastIndexOf('.');
@@ -714,9 +714,6 @@ public class MainController {
 
         pasteTask.setOnSucceeded(event -> {
             updateDirectoryView();
-            if(clipboard.isCut()){
-                clipboard.clear();
-            }
         });
 
         pasteTask.setOnFailed(event -> {

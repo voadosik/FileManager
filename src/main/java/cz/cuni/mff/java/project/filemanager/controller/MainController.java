@@ -5,6 +5,7 @@ import cz.cuni.mff.java.project.filemanager.model.FileItem;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -43,6 +44,9 @@ public class MainController {
 
     @FXML private Button btnBack;
     @FXML private Button btnForward;
+    @FXML private TextField searchTextField;
+    private File searchDirectory;
+    private Boolean isSearching = false;
 
     @FXML
     public void initialize() {
@@ -94,6 +98,7 @@ public class MainController {
         directoryTree.setRoot(rootItem);
         directoryTree.setShowRoot(true);
         directoryTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (isSearching) handleClearSearch();
             if(newValue != null) {
                 showFilesInDirectory(newValue.getValue(), true);
             }
@@ -149,8 +154,13 @@ public class MainController {
                 if(event.getClickCount() == 2 && !row.isEmpty()) {
                     FileItem item = row.getItem();
                     File file = item.getFile();
-                    if(file.isDirectory()) {
-                        showFilesInDirectory(file, true);
+                    if (isSearching) {
+                        File parentDir = file.getParentFile();
+                        navigateToDirectoryFromSearch(parentDir, file);
+                    } else {
+                        if (file.isDirectory()) {
+                            showFilesInDirectory(file, true);
+                        }
                     }
                 }
             });
@@ -159,10 +169,32 @@ public class MainController {
         fileTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
+    private void navigateToDirectoryFromSearch(File directory, File target) {
+        isSearching = false;
+        searchTextField.clear();
+
+        if(currentDirectory != null){
+            backHistory.push(currentDirectory);
+            forwardHistory.clear();
+        }
+
+        showFilesInDirectory(directory, false);
+
+        fileTable.getItems().stream()
+                .filter(item -> item.getFile().equals(target))
+                .findFirst()
+                .ifPresent(item -> {
+                    fileTable.getSelectionModel().select(item);
+                    fileTable.scrollTo(item);
+                });
+    }
+
     private void showFilesInDirectory(File directory, boolean isNavigating) {
         if(!directory.isDirectory()) return;
 
-        if(isNavigating)
+
+
+        if(isNavigating && !isSearching)
         {
             if(currentDirectory != null && !isNavigatingBack && !isNavigatingForward) {
                 backHistory.push(currentDirectory);
@@ -196,17 +228,21 @@ public class MainController {
 
     private void selectInTreeView(File directory) {
         TreeItem<File> rootItem = directoryTree.getRoot();
-        if(rootItem == null) return;
+        TreeItem<File> targetItem = findTreeItem(rootItem, directory);
 
-        for(TreeItem<File> child : rootItem.getChildren()) {
-            if(child.getValue().equals(directory)) {
-                directoryTree.getSelectionModel().select(child);
-                directoryTree.scrollTo(directoryTree.getRow(child));
-                return;
+        if (targetItem != null) {
+            TreeItem<File> parent = targetItem.getParent();
+            while (parent != null) {
+                parent.setExpanded(true);
+                parent = parent.getParent();
             }
+
+            directoryTree.getSelectionModel().select(targetItem);
+            directoryTree.scrollTo(directoryTree.getRow(targetItem));
         }
-        pathTextField.setText(directory.getAbsolutePath());
     }
+
+
 
 
 
@@ -381,6 +417,24 @@ public class MainController {
 
     }
 
+    private void searchDirectory(File dir, String text, ObservableList<FileItem> items) {
+        File[] files = dir.listFiles();
+
+        if(files == null) return;
+
+        for(File file : files) {
+            if(Thread.currentThread().isInterrupted()) return;
+
+            if(file.getName().toLowerCase().contains(text.toLowerCase())) {
+                items.add(new FileItem(file));
+            }
+            if(file.isDirectory()){
+                searchDirectory(file, text, items);
+            }
+        }
+
+    }
+
     // Handlers
 
     @FXML
@@ -504,4 +558,49 @@ public class MainController {
             isNavigatingForward = false;
         }
     }
+
+    @FXML
+    private void handleSearch(){
+        String searchText = searchTextField.getText().trim();
+        if(searchText.isEmpty()){
+            showError("Empty Search", "Please enter something to search");
+            return;
+        }
+
+        searchDirectory = currentDirectory;
+        isSearching = true;
+
+        Task<ObservableList> searchTask = new Task<>() {
+            @Override
+            protected ObservableList<FileItem> call() throws Exception {
+                ObservableList<FileItem> items = FXCollections.observableArrayList();
+                searchDirectory(searchDirectory, searchText, items);
+                return items;
+            }
+        };
+
+        searchTask.setOnSucceeded(event -> {
+            fileTable.setItems(searchTask.getValue());
+            pathTextField.setText("Results in: " + searchDirectory.getAbsolutePath());
+        });
+
+        searchTask.setOnFailed(event -> {
+            showError("Search failed", "Error during search");
+            isSearching = false;
+        });
+
+        new Thread(searchTask).start();
+
+
+    }
+
+    @FXML
+    private void handleClearSearch(){
+        isSearching = false;
+        searchTextField.clear();
+        showFilesInDirectory(searchDirectory != null ?
+                searchDirectory : currentDirectory, false);
+    }
+
+
 }

@@ -5,7 +5,7 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="cz.cuni.mff.java.project.filemanager.controller.MainController"
             stylesheets="@../style/style.css"
-            prefWidth="1280" prefHeight="960">
+            prefWidth="1920" prefHeight="1080">
     <top>
         <ToolBar>
 
@@ -15,10 +15,13 @@
             <TextField fx:id="pathTextField" prefWidth="600" editable="false"
                        style="-fx-font-family: Calibri; -fx-font-size: 16;"/>
             <Pane HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchTextField" promptText="Search files..." prefWidth="200"/>
+            <Button text="Search" onAction="#handleSearch"/>
+            <Button text="Clear" onAction="#handleClearSearch"/>
             <Button text="📄 New File" onAction="#handleNewFile"/>
             <Button text="📁 New Folder" onAction="#handleNewFolder"/>
-            <Button fx:id="btnRename" text="✏️ Rename" onAction="#handleRename"/>
-            <Button fx:id="btnDelete" text="🗑️ Delete" onAction="#handleDelete"/>
+            <Button text="✏️ Rename" onAction="#handleRename"/>
+            <Button text="🗑️ Delete" onAction="#handleDelete"/>
         </ToolBar>
     </top>
 

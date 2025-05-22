@@ -88,7 +88,9 @@ public class MainController {
         };
         rootItem.setExpanded(true);
 
-        Image driveIcon = new Image(getClass().getResourceAsStream("/images/drive-icon.png"));
+        Image driveIcon = new Image(Objects
+                .requireNonNull(getClass()
+                        .getResourceAsStream("/images/drive-icon.png")));
 
         for(File root : File.listRoots()) {
             TreeItem<File> driveItem = createNode(root);
@@ -107,7 +109,7 @@ public class MainController {
             }
         });
 
-        directoryTree.setCellFactory(tv -> new TreeCell<File>() {
+        directoryTree.setCellFactory(tv -> new TreeCell<>() {
             private final Image driveImage;
             private final Image folderImage;
 
@@ -366,7 +368,7 @@ public class MainController {
                     }
                 }
             } catch (IOException e) {
-                showError("Error occured", e.getMessage());
+                showError("Error occurred", e.getMessage());
             }
         });
 
@@ -401,9 +403,10 @@ public class MainController {
     }
 
     private void deleteRecursively(File file) throws IOException {
-        Path path = file.toPath();
+        Path path;
+        path = file.toPath();
         if(Files.exists(path)){
-            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(path, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException{
                     Files.delete(file);
@@ -438,7 +441,7 @@ public class MainController {
     }
 
     private void copyDirectory(File source, File target) throws IOException {
-        Files.walkFileTree(source.toPath(), new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(source.toPath(), new SimpleFileVisitor<>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 Path relative = source.toPath().relativize(dir);
@@ -597,12 +600,17 @@ public class MainController {
         searchDirectory = currentDirectory;
         isSearching = true;
 
-        Task<ObservableList> searchTask = new Task<>() {
+        Task<ObservableList<FileItem>> searchTask = new Task<>() {
             @Override
             protected ObservableList<FileItem> call() throws Exception {
-                ObservableList<FileItem> items = FXCollections.observableArrayList();
-                searchDirectory(searchDirectory, searchText, items);
-                return items;
+                try {
+                    ObservableList<FileItem> items = FXCollections.observableArrayList();
+                    searchDirectory(searchDirectory, searchText, items);
+                    return items;
+                } catch (Exception e) {
+                    throw new Exception(e);
+                }
+
             }
         };
 

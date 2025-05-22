@@ -11,10 +11,15 @@
 
             <Button text="←" onAction="#handleBack" disable="true" fx:id="btnBack"/>
             <Button text="→" onAction="#handleForward" disable="true" fx:id="btnForward"/>
+            <Button text="↻" onAction="#handleRefresh" fx:id="btnRefresh"/>
+
             <Separator orientation="VERTICAL"/>
+
             <TextField fx:id="pathTextField" prefWidth="600" editable="false"
                        style="-fx-font-family: Calibri; -fx-font-size: 16;"/>
+
             <Pane HBox.hgrow="ALWAYS"/>
+
             <TextField fx:id="searchTextField" promptText="Search files..." prefWidth="200"/>
             <Button text="Search" onAction="#handleSearch"/>
             <Button text="Clear" onAction="#handleClearSearch"/>
@@ -33,6 +38,7 @@
 
     <center>
         <TableView fx:id="fileTable">
+
             <columns>
                 <TableColumn fx:id="fileName" text="Name" prefWidth="250"/>
                 <TableColumn fx:id="fileType" text="Type" prefWidth="100"/>

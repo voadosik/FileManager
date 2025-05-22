@@ -24,32 +24,20 @@
     -fx-background-color: derive(-fx-accent, 20%);
 }
 
-#btnBack, #btnForward {
+#btnBack, #btnForward, #btnRefresh {
     -fx-background-color: #616161;
     -fx-text-fill: white;
 }
 
-#btnBack:hover, #btnForward:hover {
+#btnBack:hover, #btnForward:hover, #btnRefresh:hover {
     -fx-background-color: #757575;
 }
 
-#btnBack:pressed, #btnForward:pressed {
+#btnBack:pressed, #btnForward:pressed, #btnRefresh:pressed {
     -fx-background-color: #424242;
 }
 
-#btnDelete {
-    -fx-background-color: #f44336; /* Red color */
-    -fx-text-fill: white;
-}
 
-#btnDelete:hover {
-    -fx-background-color: #ff6666; /* Lighter red on hover */
-}
-
-#btnDelete:pressed {
-    -fx-background-color: #cc0000; /* Darker red when pressed */
-}
-/* Path field styling */
 #pathTextField {
     -fx-background-color: #424242;
     -fx-text-fill: white;
@@ -191,7 +179,6 @@
     -fx-background-color: #2196F3;
 }
 
-/* Add subtle shadow to table */
 .table-view {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
 }

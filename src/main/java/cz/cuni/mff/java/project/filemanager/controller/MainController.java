@@ -9,10 +9,13 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -161,6 +164,9 @@ public class MainController {
                     } else {
                         if (file.isDirectory()) {
                             showFilesInDirectory(file, true);
+                        }
+                        else {
+                            handleOpenFile(file);
                         }
                     }
                 }
@@ -680,5 +686,26 @@ public class MainController {
     }
 
 
+    @FXML
+    private void handleOpenFile(File file){
+        try{
+            if(System.getProperty("os.name").toLowerCase().contains("win")){
+                String command = "rundll32 shell32.dll,OpenAs_RunDLL " + file.getAbsolutePath();
+                Runtime.getRuntime().exec(command);
+            }
+            else{
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(file);
+                }
+            }
+        } catch (IOException e) {
+            showError("Open Failed", "Could not open file: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleRefresh() {
+        updateDirectoryView();
+    }
 
 }

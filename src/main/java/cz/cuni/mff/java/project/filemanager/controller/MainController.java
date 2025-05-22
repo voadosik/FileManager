@@ -1,6 +1,7 @@
 package cz.cuni.mff.java.project.filemanager.controller;
 
 import cz.cuni.mff.java.project.filemanager.model.FileItem;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Stack;
 
@@ -52,7 +54,6 @@ public class MainController {
 
             try{
                 if(item.getFile().renameTo(newFile)){
-                    item.getFile().renameTo(newFile);
                     updateDirectoryView();
                 }else{
                     showError("Rename failed", "Could not rename file");
@@ -77,11 +78,10 @@ public class MainController {
             public String toString() {
                 return "This PC";
             }
-        }; //Dummy
+        };
         rootItem.setExpanded(true);
 
         Image driveIcon = new Image(getClass().getResourceAsStream("/images/drive-icon.png"));
-        Image folderIcon = new Image(getClass().getResourceAsStream("/images/folder-icon.png"));
 
         for(File root : File.listRoots()) {
             TreeItem<File> driveItem = createNode(root);
@@ -105,8 +105,14 @@ public class MainController {
 
             {
                 try {
-                    driveImage = new Image(getClass().getResourceAsStream("/images/drive-icon.png"));
-                    folderImage = new Image(getClass().getResourceAsStream("/images/folder-icon.png"));
+                    driveImage = new Image(Objects
+                            .requireNonNull(getClass()
+                                    .getResourceAsStream("/images/drive-icon.png")));
+
+                    folderImage = new Image(Objects
+                            .requireNonNull(getClass()
+                                    .getResourceAsStream("/images/folder-icon.png")));
+
                 } catch (Exception e) {
                     throw new RuntimeException("Failed to load icons", e);
                 }
@@ -254,6 +260,44 @@ public class MainController {
         return item;
     }
 
+    private TreeItem<File> findTreeItem(TreeItem<File> root, File target) {
+        if (root == null || target == null) {
+            return null;
+        }
+        if (root.getValue() != null && root.getValue().getAbsolutePath().equals(target.getAbsolutePath())) {
+            return root;
+        }
+        for (TreeItem<File> child : root.getChildren()) {
+            TreeItem<File> found = findTreeItem(child, target);
+            if (found != null) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    private void updateTreeWithNewDirectory(File newDir) {
+        File parentDir = newDir.getParentFile();
+        if (parentDir == null) {
+            return;
+        }
+
+        TreeItem<File> parentTreeItem = findTreeItem(directoryTree.getRoot(), parentDir);
+        if (parentTreeItem == null) {
+            return;
+        }
+
+        boolean hasDummy = parentTreeItem.getChildren().size() == 1 &&
+                parentTreeItem.getChildren().get(0).getValue() == null;
+
+        if (!hasDummy) {
+            TreeItem<File> newItem = createNode(newDir);
+            parentTreeItem.getChildren().add(newItem);
+            parentTreeItem.getChildren().sort((ti1, ti2) ->
+                    ti1.getValue().getName().compareToIgnoreCase(ti2.getValue().getName()));
+        }
+    }
+
     private void createNewItem(boolean isDirectory) {
         TextInputDialog dialog = new TextInputDialog();
         String fileType = isDirectory ? "Directory" : "File";
@@ -269,16 +313,20 @@ public class MainController {
             }
             File newItem = new File(currentDirectory, name);
             try{
-                if(isDirectory) {
-                    if(!newItem.mkdir()) {
+                if (isDirectory) {
+                    if (newItem.mkdir()) {
+                        updateDirectoryView();
+                        updateTreeWithNewDirectory(newItem);
+                    } else {
                         showError("Fail", "Unable to create directory");
                     }
-                } else{
-                    if(!newItem.createNewFile()){
+                } else {
+                    if (newItem.createNewFile()) {
+                        updateDirectoryView();
+                    } else {
                         showError("Fail", "Unable to create new file");
                     }
                 }
-                updateDirectoryView();
             } catch (IOException e) {
                 showError("Error occured", e.getMessage());
             }
@@ -296,6 +344,22 @@ public class MainController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void removeDirectoryFromTree(File deletedDir) {
+        TreeItem<File> deletedTreeItem = findTreeItem(directoryTree.getRoot(), deletedDir);
+        if (deletedTreeItem == null) {
+            return;
+        }
+
+        TreeItem<File> parentTreeItem = deletedTreeItem.getParent();
+        if (parentTreeItem != null) {
+            parentTreeItem.getChildren().remove(deletedTreeItem);
+            parentTreeItem.getChildren().sort((ti1, ti2) ->
+                    ti1.getValue().getName().compareToIgnoreCase(ti2.getValue().getName())
+            );
+            directoryTree.refresh();
+        }
     }
 
     private void deleteRecursively(File file) throws IOException {
@@ -367,6 +431,9 @@ public class MainController {
         });
     }
 
+
+
+
     @FXML
     private void handleDelete() {
         ObservableList<FileItem> selectedItems = fileTable.getSelectionModel().getSelectedItems();
@@ -393,7 +460,10 @@ public class MainController {
             for(FileItem item : selectedItems) {
                 File f = item.getFile();
                 try{
-                    deleteRecursively(f);
+                    if (f.isDirectory() && findTreeItem(directoryTree.getRoot(), f) != null) {
+                        deleteRecursively(f);
+                        removeDirectoryFromTree(f);
+                    }
                 }catch (IOException e){
                     allDeleted = false;
                     errors.append("Failed to delete ")

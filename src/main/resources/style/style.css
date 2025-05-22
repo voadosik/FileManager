@@ -38,9 +38,17 @@
 }
 
 #btnDelete {
-    -fx-background-color: #f44336;
+    -fx-background-color: #f44336; /* Red color */
+    -fx-text-fill: white;
 }
 
+#btnDelete:hover {
+    -fx-background-color: #ff6666; /* Lighter red on hover */
+}
+
+#btnDelete:pressed {
+    -fx-background-color: #cc0000; /* Darker red when pressed */
+}
 /* Path field styling */
 #pathTextField {
     -fx-background-color: #424242;
@@ -169,6 +177,18 @@
 .button:hover {
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
+}
+
+.button:pressed {
+    -fx-background-color: derive(-fx-accent, 50%);
+}
+
+#btnCopy {
+    -fx-background-color: #4CAF50;
+}
+
+#btnPaste {
+    -fx-background-color: #2196F3;
 }
 
 /* Add subtle shadow to table */

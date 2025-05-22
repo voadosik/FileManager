@@ -2,6 +2,7 @@ package cz.cuni.mff.java.project.filemanager.controller;
 
 import cz.cuni.mff.java.project.filemanager.model.FileItem;
 
+import cz.cuni.mff.java.project.filemanager.util.ClipboardManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,15 +15,13 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Stack;
-
+import java.util.stream.Collectors;
 
 
 public class MainController {
@@ -41,6 +40,8 @@ public class MainController {
     private final Stack<File> forwardHistory = new Stack<>();
     private boolean isNavigatingBack = false;
     private boolean isNavigatingForward = false;
+
+    private final ClipboardManager clipboard = ClipboardManager.getInstance();
 
     @FXML private Button btnBack;
     @FXML private Button btnForward;
@@ -242,10 +243,6 @@ public class MainController {
         }
     }
 
-
-
-
-
     private TreeItem<File> createNode(File file) {
         String displayName = file.getPath().endsWith(File.separator)
                 ? file.getPath()
@@ -435,6 +432,31 @@ public class MainController {
 
     }
 
+    private void copyDirectory(File source, File target) throws IOException {
+        Files.walkFileTree(source.toPath(), new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                Path relative = source.toPath().relativize(dir);
+                Path destination = target.toPath().resolve(relative);
+
+                if (!Files.exists(destination)) {
+                    Files.createDirectory(destination);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Path relative = source.toPath().relativize(file);
+                Path destination = target.toPath().resolve(relative);
+
+                Files.copy(file, destination, StandardCopyOption.REPLACE_EXISTING);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+
     // Handlers
 
     @FXML
@@ -514,10 +536,10 @@ public class MainController {
             for(FileItem item : selectedItems) {
                 File f = item.getFile();
                 try{
-                    if (f.isDirectory() && findTreeItem(directoryTree.getRoot(), f) != null) {
-                        deleteRecursively(f);
+                    if (f.isDirectory()) {
                         removeDirectoryFromTree(f);
                     }
+                    deleteRecursively(f);
                 }catch (IOException e){
                     allDeleted = false;
                     errors.append("Failed to delete ")
@@ -601,6 +623,62 @@ public class MainController {
         showFilesInDirectory(searchDirectory != null ?
                 searchDirectory : currentDirectory, false);
     }
+
+    @FXML
+    private void handleCopy(){
+        ObservableList<FileItem> selectedItems = fileTable.getSelectionModel().getSelectedItems();
+        if(selectedItems == null || selectedItems.isEmpty()) {
+            showError("No items selected", "Please select items to copy");
+            return;
+        }
+
+        List<File> files = selectedItems
+                .stream()
+                .map(FileItem::getFile)
+                .toList();
+
+        clipboard.setFiles(files, false);
+    }
+
+    @FXML
+    private void handlePaste(){
+        List<File> filesToPaste = clipboard.getFiles();
+
+        if(filesToPaste.isEmpty()){
+            showError("Clipboard is empty", "No files to paste");
+            return;
+        }
+
+        Task<Void> pasteTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                for(File file : filesToPaste){
+                    File destination = new File(file.getAbsolutePath() + " - Copy");
+                    if(file.isDirectory()){
+                        copyDirectory(file, destination);
+                    }
+                    else{
+                        Files.copy(file.toPath(), destination.toPath());
+                    }
+                }
+                return null;
+            }
+        };
+
+        pasteTask.setOnSucceeded(event -> {
+            updateDirectoryView();
+            if(clipboard.isCut()){
+                clipboard.clear();
+            }
+        });
+
+        pasteTask.setOnFailed(event -> {
+            showError("Paste failed", "Error during paste");
+        });
+
+        new Thread(pasteTask).start();
+    }
+
 
 
 }

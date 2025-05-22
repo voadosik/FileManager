@@ -21,6 +21,8 @@
             <Button text="📄 New File" onAction="#handleNewFile"/>
             <Button text="📁 New Folder" onAction="#handleNewFolder"/>
             <Button text="✏️ Rename" onAction="#handleRename"/>
+            <Button text="⎘ Copy" onAction="#handleCopy"/>
+            <Button text="📋 Paste" onAction="#handlePaste"/>
             <Button text="🗑️ Delete" onAction="#handleDelete"/>
         </ToolBar>
     </top>

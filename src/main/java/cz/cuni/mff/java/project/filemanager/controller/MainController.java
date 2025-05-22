@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.stream.Collectors;
 
 
 public class MainController {
@@ -646,6 +645,39 @@ public class MainController {
         clipboard.setFiles(files, false);
     }
 
+    private File generateName(File targetDirectory, String name){
+        String baseName;
+        String extension;
+        int dot = name.lastIndexOf('.');
+
+        if(dot > 0){
+            baseName = name.substring(0, dot);
+            extension = name.substring(dot);
+        }else{
+            baseName = name;
+            extension = "";
+        }
+
+        int copyNumber = 1;
+        File candidate = new File(targetDirectory, name);
+
+        if(!candidate.exists()){
+            return candidate;
+        }
+
+        while(true){
+            String newName = String.format("%s - Copy%s", baseName, extension);
+            if(copyNumber > 1){
+                newName = String.format("%s - Copy(%d)%s", baseName, copyNumber, extension);
+            }
+            candidate = new File(targetDirectory, newName);
+            if(!candidate.exists()){
+                return candidate;
+            }
+            copyNumber++;
+        }
+    }
+
     @FXML
     private void handlePaste(){
         List<File> filesToPaste = clipboard.getFiles();
@@ -659,7 +691,8 @@ public class MainController {
             @Override
             protected Void call() throws Exception {
                 for(File file : filesToPaste){
-                    File destination = new File(file.getAbsolutePath() + " - Copy");
+                    File destination = generateName(currentDirectory, file.getName());
+
                     if(file.isDirectory()){
                         copyDirectory(file, destination);
                     }
@@ -679,7 +712,8 @@ public class MainController {
         });
 
         pasteTask.setOnFailed(event -> {
-            showError("Paste failed", "Error during paste");
+            Throwable ex = event.getSource().getException();
+            showError("Paste failed", "Error during paste, exception: " + ex.getMessage());
         });
 
         new Thread(pasteTask).start();

@@ -37,6 +37,7 @@ public class FileManagerApp extends Application {
 
     /**
      * Application launch
+     * @param args Program arguments
      */
     public static void main(String[] args) {
         launch(args);

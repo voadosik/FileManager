@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * Main application class for the File Manager
  * Initializes and configures the JavaFX application window.
- * */
+ */
 public class FileManagerApp extends Application {
     /**
      * Entry point of the application
@@ -35,7 +35,9 @@ public class FileManagerApp extends Application {
         primaryStage.show();
     }
 
-    //Start application
+    /**
+     * Application launch
+     */
     public static void main(String[] args) {
         launch(args);
     }

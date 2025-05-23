@@ -10,7 +10,10 @@
   <name>FileManager</name>
 
   <properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <junit.version>5.10.2</junit.version>
   </properties>
 
@@ -131,9 +134,6 @@
         <version>0.0.8</version>
         <configuration>
             <mainClass>cz.cuni.mff.java.project.filemanager.FileManagerApp</mainClass>
-            <launcher>launcher</launcher>
-            <jlinkImageName>filemanager</jlinkImageName>
-            <jlinkZipName>filemanager</jlinkZipName>
         </configuration>
       </plugin>
 

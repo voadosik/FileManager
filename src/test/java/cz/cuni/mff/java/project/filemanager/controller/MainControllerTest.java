@@ -1,19 +1,14 @@
 package cz.cuni.mff.java.project.filemanager.controller;
 
 import cz.cuni.mff.java.project.filemanager.model.FileItem;
-import cz.cuni.mff.java.project.filemanager.util.ClipboardManager;
-import javafx.collections.ObservableList;
-import javafx.scene.control.TextInputDialog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 

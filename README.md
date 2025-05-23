@@ -43,3 +43,9 @@ mvn clean javafx:run
 - Current directory path
 - Search - enter query in search field
 - Refresh button(in case of the recent file modification)
+
+### Tests
+To run tests use:
+```bash
+mvn test
+```

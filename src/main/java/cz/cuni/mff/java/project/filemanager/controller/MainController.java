@@ -25,7 +25,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Stack;
 
-
+/**
+ * Main controller class for the file manager app.
+ * Handles all user interactions.
+ */
 public class MainController {
     @FXML protected TreeView<File> directoryTree;
     @FXML protected TableView<FileItem> fileTable;
@@ -51,8 +54,16 @@ public class MainController {
     private File searchDirectory;
     private Boolean isSearching = false;
 
+
+
+    /**
+     * Initialize the controller after FXML loading.
+     * Sets up table columns and cell factories, directory tree structure.
+     * Cell factories for tree and table views, event handlers for file operations.
+     */
     @FXML
     public void initialize() {
+        // Configure file name column with cells
         fileName.setCellValueFactory(new PropertyValueFactory<>("name"));
         fileName.setOnEditCommit(event -> {
             FileItem item = event.getRowValue();
@@ -60,26 +71,31 @@ public class MainController {
             File newFile = new File(item.getFile().getParentFile(), newName);
 
             try{
+                // Attempt file rename operation
                 if(item.getFile().renameTo(newFile)){
                     updateDirectoryView();
                 }else{
                     showError("Rename failed", "Could not rename file");
-                    fileTable.refresh();
+                    fileTable.refresh(); // Revert table
                 }
 
             }catch (SecurityException se){
                 showError("Permission denied", "No permission to rename file");
-                fileTable.refresh();
+                fileTable.refresh(); // Revert table
             }
         });
+
+        // Configure remaining table columns
         fileType.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getFile().isDirectory() ? "Directory" : "File"));
         fileDate.setCellValueFactory(new PropertyValueFactory<>("modified"));
         fileSize.setCellValueFactory(new PropertyValueFactory<>("size"));
 
+        // Initialize navigation buttons state
         btnBack.setDisable(true);
         btnForward.setDisable(true);
 
+        // Create root node for directory tree
         TreeItem<File> rootItem = new TreeItem<>(new File("This PC")){
             @Override
             public String toString() {
@@ -88,10 +104,12 @@ public class MainController {
         };
         rootItem.setExpanded(true);
 
+        // Load drive icon for tree items
         Image driveIcon = new Image(Objects
                 .requireNonNull(getClass()
-                        .getResourceAsStream("/images/drive-icon.png")));
+                        .getResourceAsStream("/cz/cuni/mff/java/project/filemanager/images/drive-icon.png")));
 
+        // Add available drives to the root
         for(File root : File.listRoots()) {
             TreeItem<File> driveItem = createNode(root);
             ImageView icon = new ImageView(driveIcon);
@@ -100,28 +118,32 @@ public class MainController {
             driveItem.setGraphic(icon);
             rootItem.getChildren().add(driveItem);
         }
+
         directoryTree.setRoot(rootItem);
         directoryTree.setShowRoot(true);
+
+        // Handle directory tree selection changes
         directoryTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (isSearching) handleClearSearch();
             if(newValue != null) {
-                showFilesInDirectory(newValue.getValue(), true);
+                showFilesInDirectory(newValue.getValue(), true); //update file view
             }
         });
 
+        // Cells for directory tree items
         directoryTree.setCellFactory(tv -> new TreeCell<>() {
             private final Image driveImage;
             private final Image folderImage;
-
             {
+                // Load icons
                 try {
                     driveImage = new Image(Objects
                             .requireNonNull(getClass()
-                                    .getResourceAsStream("/images/drive-icon.png")));
+                                    .getResourceAsStream("/cz/cuni/mff/java/project/filemanager/images/drive-icon.png")));
 
                     folderImage = new Image(Objects
                             .requireNonNull(getClass()
-                                    .getResourceAsStream("/images/folder-icon.png")));
+                                    .getResourceAsStream("/cz/cuni/mff/java/project/filemanager/images/folder-icon.png")));
 
                 } catch (Exception e) {
                     throw new RuntimeException("Failed to load icons", e);
@@ -141,6 +163,7 @@ public class MainController {
                     iconView.setFitWidth(16);
                     iconView.setFitHeight(16);
 
+                    //Set icon
                     if (item.getPath().endsWith(File.separator)) {
                         iconView.setImage(driveImage);
                     } else {
@@ -152,7 +175,10 @@ public class MainController {
             }
         });
 
+        // User home is current dir
         currentDirectory = new File("user.home");
+
+        // Configure row double-click
         fileTable.setRowFactory(tv ->{
             TableRow<FileItem> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -160,23 +186,32 @@ public class MainController {
                     FileItem item = row.getItem();
                     File file = item.getFile();
                     if (isSearching) {
+                        // Navigate to search result's parent directory
                         File parentDir = file.getParentFile();
                         navigateToDirectoryFromSearch(parentDir, file);
                     } else {
                         if (file.isDirectory()) {
-                            showFilesInDirectory(file, true);
+                            showFilesInDirectory(file, true); // Go to directory
                         }
                         else {
-                            handleOpenFile(file);
+                            handleOpenFile(file); // Open file with default app
                         }
                     }
                 }
             });
             return row;
         });
+
+        // Enable multi-selection in file table
         fileTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
+
+    /**
+     * Navigates to a directory from the search string
+     * @param directory Destination directory to display
+     * @param target File to highlight in the directory view
+     */
     private void navigateToDirectoryFromSearch(File directory, File target) {
         isSearching = false;
         searchTextField.clear();
@@ -197,11 +232,13 @@ public class MainController {
                 });
     }
 
+    /**
+     * Displays files in the specified directory
+     * @param directory Directory to display
+     * @param isNavigating True if navigation controls are used
+     */
     protected void showFilesInDirectory(File directory, boolean isNavigating) {
         if(!directory.isDirectory()) return;
-
-
-
         if(isNavigating && !isSearching)
         {
             if(currentDirectory != null && !isNavigatingBack && !isNavigatingForward) {
@@ -218,6 +255,10 @@ public class MainController {
         selectInTreeView(directory);
     }
 
+    /**
+     * Populates the file table with items from the directory
+     * @param directory Directory, contents of which to display
+     */
     protected void updateFileTable(File directory) {
         ObservableList<FileItem> items = FXCollections.observableArrayList();
         File[] files = directory.listFiles();
@@ -229,11 +270,19 @@ public class MainController {
         fileTable.setItems(items);
     }
 
+    /**
+     * Updates the state of navigation buttons based on the history stacks
+     */
     private void updateNavigationButtons() {
         btnBack.setDisable(backHistory.isEmpty());
         btnForward.setDisable(forwardHistory.isEmpty());
     }
 
+
+    /**
+     * Reveals the specified directory in the tree view
+     * @param directory Directory to select in the tree structure
+     */
     private void selectInTreeView(File directory) {
         TreeItem<File> rootItem = directoryTree.getRoot();
         TreeItem<File> targetItem = findTreeItem(rootItem, directory);
@@ -250,6 +299,11 @@ public class MainController {
         }
     }
 
+    /**
+     * Creates a tree node for the file system structure
+     * @param file Item to represent in the tree
+     * @return Configured TreeItem with children received via lazy loading
+     */
     private TreeItem<File> createNode(File file) {
         String displayName = file.getPath().endsWith(File.separator)
                 ? file.getPath()
@@ -264,12 +318,15 @@ public class MainController {
         item.setExpanded(false);
 
         if(file.isDirectory()) {
+            // Add dummy node to enable expansion arrow before loading
             TreeItem<File> dummy = new TreeItem<>();
             item.getChildren().add(dummy);
 
+            // Handle expansion events for lazy loading
             item.addEventHandler(TreeItem.<File>branchExpandedEvent(), event -> {
                 TreeItem<File> expandedItem = event.getSource();
 
+                // Check if we need to load real children
                 if (expandedItem.getChildren().size() == 1 &&
                         expandedItem.getChildren().get(0).getValue() == null) {
 
@@ -284,7 +341,6 @@ public class MainController {
                 }
             });
         }
-
         item.expandedProperty().addListener((observable, wasExpanded, isExpanded) -> {
            if(isExpanded && item.getChildren().isEmpty()) {
                item.getChildren().clear();
@@ -300,6 +356,13 @@ public class MainController {
         return item;
     }
 
+
+    /**
+     * Searches the directory tree for a specific file node
+     * @param root Starting node for the search
+     * @param target File to locate
+     * @return TreeItem containing the target file
+     */
     private TreeItem<File> findTreeItem(TreeItem<File> root, File target) {
         if (root == null || target == null) {
             return null;
@@ -316,6 +379,11 @@ public class MainController {
         return null;
     }
 
+
+    /**
+     * Updates the directory tree when a new directory is added
+     * @param newDir New directory to add to the tree
+     */
     private void updateTreeWithNewDirectory(File newDir) {
         File parentDir = newDir.getParentFile();
         if (parentDir == null) {
@@ -338,6 +406,10 @@ public class MainController {
         }
     }
 
+    /**
+     * Handles creation of new files/directories through a dialog
+     * @param isDirectory True - directory, False - file
+     */
     private void createNewItem(boolean isDirectory) {
         TextInputDialog dialog = new TextInputDialog();
         String fileType = isDirectory ? "Directory" : "File";
@@ -374,10 +446,18 @@ public class MainController {
 
     }
 
+    /**
+     * Refreshes the current directory view
+     */
     private void updateDirectoryView() {
         showFilesInDirectory(currentDirectory, false);
     }
 
+    /**
+     * Displays an error dialog to the user
+     * @param title Dialog window title
+     * @param message Dialog error message
+     */
     private void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -386,6 +466,10 @@ public class MainController {
         alert.showAndWait();
     }
 
+    /**
+     * Removes a directory node from the tree view
+     * @param deletedDir Directory to remove
+     */
     private void removeDirectoryFromTree(File deletedDir) {
         TreeItem<File> deletedTreeItem = findTreeItem(directoryTree.getRoot(), deletedDir);
         if (deletedTreeItem == null) {
@@ -402,6 +486,11 @@ public class MainController {
         }
     }
 
+    /**
+     * Deletes a file or directory
+     * @param file Target directory/file to delete
+     * @throws IOException If any deletion operation fails
+     */
     protected void deleteRecursively(File file) throws IOException {
         Path path;
         path = file.toPath();
@@ -422,6 +511,12 @@ public class MainController {
 
     }
 
+    /**
+     * Recursively searches a directory for files matching the search
+     * @param dir Directory to search
+     * @param text Search query, case-insensitive
+     * @param items List to add matching files
+     */
     private void searchDirectory(File dir, String text, ObservableList<FileItem> items) {
         File[] files = dir.listFiles();
 
@@ -440,8 +535,21 @@ public class MainController {
 
     }
 
+    /**
+     * Copies a directory structure
+     * @param source Source directory to copy
+     * @param target Destination directory
+     * @throws IOException if any copy operation fails
+     */
     private void copyDirectory(File source, File target) throws IOException {
+        // Use FileVisitor to recursively walk through the directory tree
         Files.walkFileTree(source.toPath(), new SimpleFileVisitor<>() {
+            /**
+             * Handles directories before their contents are processed
+             * @param dir Current directory being visited
+             * @param attrs Directory attributes
+             * @return CONTINUE to keep processing the file tree
+             */
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 Path relative = source.toPath().relativize(dir);
@@ -453,30 +561,86 @@ public class MainController {
                 return FileVisitResult.CONTINUE;
             }
 
+            /**
+             * Handles individual files during traversal
+             * @param file Current file
+             * @param attrs File attributes
+             * @return CONTINUE to keep processing the file tree
+             */
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Path relative = source.toPath().relativize(file);
                 Path destination = target.toPath().resolve(relative);
 
-                Files.copy(file, destination, StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(file, destination);
                 return FileVisitResult.CONTINUE;
             }
         });
     }
 
+    /**
+     * Generates unique name for files
+     * @param targetDirectory Destination directory
+     * @param name Original file name
+     * @return File with unique name for the target directory
+     */
+    protected File generateName(File targetDirectory, String name){
+        String baseName;
+        String extension;
+        int dot = name.lastIndexOf('.');
+
+        if(dot > 0){
+            baseName = name.substring(0, dot);
+            extension = name.substring(dot);
+        }else{
+            baseName = name;
+            extension = "";
+        }
+
+        int copyNumber = 1;
+        File candidate = new File(targetDirectory, name);
+
+        if(!candidate.exists()){
+            return candidate;
+        }
+
+        while(true){
+            String newName = String.format("%s - Copy%s", baseName, extension);
+            if(copyNumber > 1){
+                newName = String.format("%s - Copy(%d)%s", baseName, copyNumber, extension);
+            }
+            candidate = new File(targetDirectory, newName);
+            if(!candidate.exists()){
+                return candidate;
+            }
+            copyNumber++;
+        }
+    }
+
 
     // Handlers
 
+
+    /**
+     * Handles new file creation
+     */
     @FXML
     private void handleNewFile() {
         createNewItem(false);
     }
 
+    /**
+     * Handles new directory creation
+     */
     @FXML
     private void handleNewFolder() {
         createNewItem(true);
     }
 
+    /**
+     * Handles file/directory rename
+     * Shows input dialog and validates new name
+     */
     @FXML
     private void handleRename() {
         FileItem selectedItem = fileTable.getSelectionModel().getSelectedItem();
@@ -515,9 +679,10 @@ public class MainController {
         });
     }
 
-
-
-
+    /**
+     * Handles file/directory deletion
+     * Shows confirmation dialog before proceeding
+     */
     @FXML
     private void handleDelete() {
         ObservableList<FileItem> selectedItems = fileTable.getSelectionModel().getSelectedItems();
@@ -567,6 +732,9 @@ public class MainController {
 
     }
 
+    /**
+     * Navigates back through directory history
+     */
     @FXML
     protected void handleBack(){
         if(!backHistory.isEmpty()) {
@@ -578,6 +746,9 @@ public class MainController {
         }
     }
 
+    /**
+     * Navigates forward through directory history
+     */
     @FXML
     protected void handleForward(){
         if(!forwardHistory.isEmpty()) {
@@ -589,6 +760,9 @@ public class MainController {
         }
     }
 
+    /**
+     * Executes file search operation
+     */
     @FXML
     private void handleSearch(){
         String searchText = searchTextField.getText().trim();
@@ -629,6 +803,9 @@ public class MainController {
 
     }
 
+    /**
+     * Clears current search results
+     */
     @FXML
     private void handleClearSearch(){
         isSearching = false;
@@ -637,6 +814,9 @@ public class MainController {
                 searchDirectory : currentDirectory, false);
     }
 
+    /**
+     * Handles copy operation to clipboard
+     */
     @FXML
     private void handleCopy(){
         ObservableList<FileItem> selectedItems = fileTable.getSelectionModel().getSelectedItems();
@@ -650,42 +830,12 @@ public class MainController {
                 .map(FileItem::getFile)
                 .toList();
 
-        clipboard.setFiles(files, false);
+        clipboard.setFiles(files);
     }
 
-    protected File generateName(File targetDirectory, String name){
-        String baseName;
-        String extension;
-        int dot = name.lastIndexOf('.');
-
-        if(dot > 0){
-            baseName = name.substring(0, dot);
-            extension = name.substring(dot);
-        }else{
-            baseName = name;
-            extension = "";
-        }
-
-        int copyNumber = 1;
-        File candidate = new File(targetDirectory, name);
-
-        if(!candidate.exists()){
-            return candidate;
-        }
-
-        while(true){
-            String newName = String.format("%s - Copy%s", baseName, extension);
-            if(copyNumber > 1){
-                newName = String.format("%s - Copy(%d)%s", baseName, copyNumber, extension);
-            }
-            candidate = new File(targetDirectory, newName);
-            if(!candidate.exists()){
-                return candidate;
-            }
-            copyNumber++;
-        }
-    }
-
+    /**
+     * Handles paste operation from clipboard
+     */
     @FXML
     private void handlePaste(){
         List<File> filesToPaste = clipboard.getFiles();
@@ -724,24 +874,24 @@ public class MainController {
         new Thread(pasteTask).start();
     }
 
-
+    /**
+     * Opens file with default system application
+     * @param file File to open
+     */
     @FXML
     private void handleOpenFile(File file){
         try{
-            if(System.getProperty("os.name").toLowerCase().contains("win")){
-                String command = "rundll32 shell32.dll,OpenAs_RunDLL " + file.getAbsolutePath();
-                Runtime.getRuntime().exec(command);
-            }
-            else{
-                if (Desktop.isDesktopSupported()) {
-                    Desktop.getDesktop().open(file);
-                }
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(file);
             }
         } catch (IOException e) {
             showError("Open Failed", "Could not open file: " + e.getMessage());
         }
     }
 
+    /**
+     * Refreshes current directory view
+     */
     @FXML
     private void handleRefresh() {
         updateDirectoryView();

@@ -4,7 +4,7 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="cz.cuni.mff.java.project.filemanager.controller.MainController"
-            stylesheets="@../style/style.css"
+            stylesheets="@../../style/style.css"
             prefWidth="1780" prefHeight="980">
     <top>
         <ToolBar>

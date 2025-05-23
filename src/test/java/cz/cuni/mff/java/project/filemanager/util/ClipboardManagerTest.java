@@ -20,7 +20,7 @@ class ClipboardManagerTest {
     void copiesTest() {
         ClipboardManager clipboard = ClipboardManager.getInstance();
         List<File> original = List.of(new File("test1.txt"), new File("test2.txt"));
-        clipboard.setFiles(original, false);
+        clipboard.setFiles(original);
         List<File> retrieved = clipboard.getFiles();
         assertNotSame(original, retrieved);
         assertEquals(original.size(), retrieved.size());
@@ -29,7 +29,7 @@ class ClipboardManagerTest {
     @Test
     void resetStateTest() {
         ClipboardManager clipboard = ClipboardManager.getInstance();
-        clipboard.setFiles(List.of(new File("test.txt")), true);
+        clipboard.setFiles(List.of(new File("test.txt")));
         clipboard.clear();
         assertTrue(clipboard.getFiles().isEmpty());
     }

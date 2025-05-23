@@ -34,12 +34,11 @@
 }
 
 #btnBack:pressed, #btnForward:pressed, #btnRefresh:pressed {
-    -fx-background-color: #424242;
+    -fx-background-color: #373737;
 }
 
-
 #pathTextField {
-    -fx-background-color: #424242;
+    -fx-background-color: #373737;
     -fx-text-fill: white;
     -fx-font-size: 14;
     -fx-padding: 8;
@@ -48,7 +47,7 @@
 
 /* Table styling */
 .table-view {
-    -fx-background-color: #424242;
+    -fx-background-color: #373737;
     -fx-table-cell-border-color: transparent;
     -fx-table-header-border-color: transparent;
 }
@@ -67,13 +66,10 @@
 }
 
 .table-row-cell {
-    -fx-background-color: #424242;
+    -fx-background-color: #232426;
     -fx-text-fill: white;
 }
 
-.table-row-cell:odd {
-    -fx-background-color: #383838;
-}
 
 .table-row-cell:selected {
     -fx-background-color: -fx-accent;
@@ -120,7 +116,7 @@
 }
 
 .tree-cell .tree-disclosure-node {
-    -fx-graphic: url("/images/folder-icon.png");
+    -fx-graphic: url("/cz/cuni/mff/java/project/filemanager/images/folder-icon.png");
     -fx-content-display: graphic-only;
 }
 .tree-cell:selected {
@@ -141,21 +137,6 @@
     -fx-background-color: -fx-accent;
 }
 
-.nav-button {
-    -fx-background-color: #607D8B;
-    -fx-font-size: 16;
-}
-
-.action-button {
-    -fx-background-color: #2196F3;
-    -fx-font-size: 14;
-}
-
-.danger-button {
-    -fx-background-color: #f44336;
-    -fx-font-size: 14;
-}
-
 /* Add hover animations */
 .button {
     -fx-cursor: hand;
@@ -171,26 +152,9 @@
     -fx-background-color: derive(-fx-accent, 50%);
 }
 
-#btnCopy {
-    -fx-background-color: #4CAF50;
-}
-
-#btnPaste {
-    -fx-background-color: #2196F3;
-}
-
-.table-view {
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
-}
-
 /* Style scrollbars */
 .scroll-bar:vertical {
     -fx-background-color: #2b2b2b;
-}
-
-.scroll-bar .thumb {
-    -fx-background-color: #607D8B;
-    -fx-background-radius: 4;
 }
 
 #searchTextField {

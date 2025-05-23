@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="FileManager" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44300700-51e8-4dd6-b9e5-f87643ac572f" name="Changes" comment="Fixed navigation stacks">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/style/style.css" afterDir="false" />
+    <list default="true" id="44300700-51e8-4dd6-b9e5-f87643ac572f" name="Changes" comment="Tests">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/FileManager.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/FileManagerApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/FileManagerApp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/layout/main.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/layout/main.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/model/FileItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/model/FileItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/util/ClipboardManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cz/cuni/mff/java/project/filemanager/util/ClipboardManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/images/drive-icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cz/cuni/mff/java/project/filemanager/images/drive-icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/images/folder-icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cz/cuni/mff/java/project/filemanager/images/folder-icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/layout/main.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cz/cuni/mff/java/project/filemanager/layout/layout/main.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/style/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cz/cuni/mff/java/project/filemanager/style/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/cz/cuni/mff/java/project/filemanager/util/ClipboardManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cz/cuni/mff/java/project/filemanager/util/ClipboardManagerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,31 +33,32 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "voadosik"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;voadosik&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/voadosik/FileManager.git",
-    "accountId": "2c755f4f-2589-4a32-b1c3-359d649d7306"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/voadosik/FileManager.git&quot;,
+    &quot;accountId&quot;: &quot;2c755f4f-2589-4a32-b1c3-359d649d7306&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2wjR1nIXJBmcmTkT6MTkZUtEDnB" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -53,19 +67,145 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.FileManager.executor": "Run",
     "Application.FileManagerApp.executor": "Run",
+    "JUnit.ClipboardManagerTest.executor": "Run",
+    "JUnit.FileItemTest.executor": "Run",
+    "JUnit.MainControllerTest.directoryChangeTest (1).executor": "Run",
+    "JUnit.MainControllerTest.directoryChangeTest.executor": "Run",
+    "JUnit.MainControllerTest.executor": "Run",
+    "JUnit.MainControllerTest.invalidNameTest.executor": "Run",
+    "JUnit.MainControllerTest.navigationHistoryTest.executor": "Run",
+    "JUnit.MainControllerTest.newFileCreationTest.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/vlad/Downloads/javafx-sdk-24/lib",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "MavenSettings",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\vlad\Desktop\FileManager\src\main\resources\cz\cuni\mff\java\project\filemanager" />
+      <recent name="C:\Users\vlad\Desktop\FileManager\src\main\resources\cz\cuni\mff\java\project\filemanager\layout" />
+      <recent name="C:\Users\vlad\Desktop\FileManager\out\artifacts\FileManager_jar" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="cz.cuni.mff.java.project.filemanager.controller" />
+      <recent name="cz.cuni.mff.java.project.filemanager.util" />
+      <recent name="cz.cuni.mff.java.project.filemanager.model" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.FileManager">
+    <configuration name="FileManager" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="cz.cuni.mff.java.project.filemanager.FileManagerApp" />
+      <module name="FileManager" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ClipboardManagerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FileManager" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cz.cuni.mff.java.project.filemanager.util.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cz.cuni.mff.java.project.filemanager.util" />
+      <option name="MAIN_CLASS_NAME" value="cz.cuni.mff.java.project.filemanager.util.ClipboardManagerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FileItemTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FileManager" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cz.cuni.mff.java.project.filemanager.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cz.cuni.mff.java.project.filemanager.model" />
+      <option name="MAIN_CLASS_NAME" value="cz.cuni.mff.java.project.filemanager.model.FileItemTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FileManager" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cz.cuni.mff.java.project.filemanager.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cz.cuni.mff.java.project.filemanager.controller" />
+      <option name="MAIN_CLASS_NAME" value="cz.cuni.mff.java.project.filemanager.controller.MainControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainControllerTest.invalidNameTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FileManager" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cz.cuni.mff.java.project.filemanager.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cz.cuni.mff.java.project.filemanager.controller" />
+      <option name="MAIN_CLASS_NAME" value="cz.cuni.mff.java.project.filemanager.controller.MainControllerTest" />
+      <option name="METHOD_NAME" value="invalidNameTest(java.nio.file.Path)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainControllerTest.newFileCreationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="FileManager" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cz.cuni.mff.java.project.filemanager.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cz.cuni.mff.java.project.filemanager.controller" />
+      <option name="MAIN_CLASS_NAME" value="cz.cuni.mff.java.project.filemanager.controller.MainControllerTest" />
+      <option name="METHOD_NAME" value="newFileCreationTest(java.nio.file.Path)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.ClipboardManagerTest" />
+        <item itemvalue="JUnit.FileItemTest" />
+        <item itemvalue="JUnit.MainControllerTest" />
+        <item itemvalue="JUnit.MainControllerTest.invalidNameTest" />
+        <item itemvalue="JUnit.MainControllerTest.newFileCreationTest" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -82,7 +222,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1746552784878</updated>
-      <workItem from="1746552785903" duration="21175000" />
+      <workItem from="1746552785903" duration="22101000" />
+      <workItem from="1747920859696" duration="13189000" />
+      <workItem from="1747935665981" duration="15669000" />
     </task>
     <task id="LOCAL-00001" summary="Create project">
       <option name="closed" value="true" />
@@ -148,7 +290,71 @@
       <option name="project" value="LOCAL" />
       <updated>1746567013960</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Icons, side bar folder tree">
+      <option name="closed" value="true" />
+      <created>1746576927448</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1746576927448</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Fixed tree view when adding/removing directories">
+      <option name="closed" value="true" />
+      <created>1747924676914</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1747924676914</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Add a search component">
+      <option name="closed" value="true" />
+      <created>1747927550085</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1747927550085</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Copy/Paste">
+      <option name="closed" value="true" />
+      <created>1747929517295</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1747929517295</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Refresh button, file opening">
+      <option name="closed" value="true" />
+      <created>1747930604321</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1747930604321</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Paste fixed">
+      <option name="closed" value="true" />
+      <created>1747934319170</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1747934319170</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Minor">
+      <option name="closed" value="true" />
+      <created>1747946462986</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1747946462986</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Tests">
+      <option name="closed" value="true" />
+      <created>1747955940584</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1747955940585</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -164,6 +370,14 @@
     <MESSAGE value="New file, folder, remove" />
     <MESSAGE value="Rename" />
     <MESSAGE value="Fixed navigation stacks" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed navigation stacks" />
+    <MESSAGE value="Icons, side bar folder tree" />
+    <MESSAGE value="Fixed tree view when adding/removing directories" />
+    <MESSAGE value="Add a search component" />
+    <MESSAGE value="Copy/Paste" />
+    <MESSAGE value="Refresh button, file opening" />
+    <MESSAGE value="Paste fixed" />
+    <MESSAGE value="Minor" />
+    <MESSAGE value="Tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tests" />
   </component>
 </project>
